@@ -16,13 +16,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  # Configuración de MongoDB
-  data:
-    mongodb:
-      host: ${MDB_HOST}
-      port: ${MDB_PORT}
-      database: ${MDB_NAME}
-      username: ${MDB_USERNAME}
-      password: ${MDB_PASSWORD}
-

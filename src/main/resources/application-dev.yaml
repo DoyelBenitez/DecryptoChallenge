@@ -1,6 +1,15 @@
 # application-dev.properties
 
+# Configuración de MongoDB
 spring:
+  data:
+    mongodb:
+      host: ${MDB_HOST}
+      port: ${MDB_PORT}
+      database: ${MDB_NAME}
+      username: ${MDB_USERNAME}
+      password: ${MDB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: update
