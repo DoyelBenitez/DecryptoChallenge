@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: 'challenge'
+  security:
+    user:
+      name: ${API_USER}
+      password: ${API_PASSWORD}
+
+# Configuracion de PostgreSQL
+  datasource:
+    url: jdbc:postgresql://${PDB_HOST}:${PDB_PORT}/${PDB_NAME}
+    username: ${PDB_USERNAME}
+    password: ${PDB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Configuración de MongoDB
+  data:
+    mongodb:
+      host: ${MDB_HOST}
+      port: ${MDB_PORT}
+      database: ${MDB_NAME}
+      username: ${MDB_USERNAME}
+      password: ${MDB_PASSWORD}
+

@@ -1,0 +1,51 @@
+name: 'challenge'
+services:
+  backend:
+    image: 'challenge-backend'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${BACKEND_EXTERNAL_PORT}:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${PROFILE_ACTIVE}
+      API_USER: ${API_USER}
+      API_PASSWORD: ${API_PASSWORD}
+      PDB_NAME: ${PDB_NAME}
+      PDB_HOST: ${PDB_HOST}
+      PDB_PORT: ${PDB_PORT}
+      PDB_USERNAME: ${PDB_USERNAME}
+      PDB_PASSWORD: ${PDB_PASSWORD}
+      MDB_NAME: ${MDB_NAME}
+      MDB_HOST: ${MDB_HOST}
+      MDB_PORT: ${MDB_PORT}
+      MDB_USERNAME: ${MDB_USERNAME}
+      MDB_PASSWORD: ${MDB_PASSWORD}
+    depends_on:
+      - postgresdb
+      - mongodb
+
+  postgresdb:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${PDB_NAME}
+      POSTGRES_USER: ${PDB_USERNAME}
+      POSTGRES_PASSWORD: ${PDB_PASSWORD}
+    ports:
+      - "${PDB_EXTERNAL_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  mongodb:
+    image: "mongo:8.0.0"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MDB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MDB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MDB_NAME}
+    ports:
+      - "${MDB_EXTERNAL_PORT}:27017"
+    volumes:
+      - "./src/main/resources/scripts/init-challenge.js:/docker-entrypoint-initdb.d/init-challenge.js"
+
+volumes:
+  postgres-data:

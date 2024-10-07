@@ -1,0 +1,12 @@
+# application-docker.properties
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+#Configuracion de TokenJWT
+security:
+  jwt:
+    secret-key-path-prod: '../webapps/tesis/WEB-INF/classes/jwtSecret.key'
