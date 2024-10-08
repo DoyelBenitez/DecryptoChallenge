@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.*
+
 plugins {
 	java
 	id("org.springframework.boot") version "3.3.4"
@@ -44,4 +47,13 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.test {
+	val envFile = file("src/main/resources/credentials/credential-dev.env")
+	if (envFile.exists()) {
+		val props = Properties()
+		props.load(FileInputStream(envFile))
+		props.forEach { key, value -> environment(key as String, value as String) }
+	}
 }
