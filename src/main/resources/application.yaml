@@ -1,3 +1,7 @@
+server:
+  servlet:
+    context-path: '/challenge/api/'
+
 spring:
   application:
     name: 'challenge'

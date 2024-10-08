@@ -1,4 +1,4 @@
-package com.decrypto.challenge.configs;
+package com.decrypto.challenge.core.configs;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
