@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.List;
  * @Author dbenitez
  */
 
+@Slf4j
 public class JwtFilter extends GenericFilterBean {
 
     private final List<String> rutasPermitidasSinToken = List.of(
@@ -35,6 +37,8 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+        log.info("Method: {}", request.getMethod());
+        log.info("Request: {}", request.getRequestURL());
         if (/*!this.accessURLWithoutToken(request)*/ false) {
             try {
                 Authentication authentication = JwtTokenProvider.getAuthentication(request);

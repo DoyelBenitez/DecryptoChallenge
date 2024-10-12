@@ -1,5 +1,7 @@
 package com.decrypto.challenge.auth._core.configs;
 
+import com.decrypto.challenge.auth._core.filters.FiltersConfig;
+import jakarta.servlet.FilterConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -64,12 +67,12 @@ public class SecurityConfig {
                         .requestMatchers("/test/ping").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
 
-                        .requestMatchers("/api/auth/v1/signIn").permitAll()
+                        .requestMatchers("/auth/v1/signIn").permitAll()
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .csrf(AbstractHttpConfigurer::disable);
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .with(new FiltersConfig(), Customizer.withDefaults());
+
         return http.build();
     }
 

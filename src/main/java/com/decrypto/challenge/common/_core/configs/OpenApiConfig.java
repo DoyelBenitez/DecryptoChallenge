@@ -4,7 +4,12 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * @Author dbenitez
@@ -24,4 +29,16 @@ import org.springframework.context.annotation.Configuration;
         bearerFormat = "JWT"
 )
 public class OpenApiConfig {
+
+        @Bean
+        public OpenAPI customOpenAPI() {
+                Server prodServer = new Server();
+                prodServer.setUrl("https://decryptochallenge-production.up.railway.app/challenge/api/"); // Usa HTTPS aquí
+                prodServer.setDescription("Servidor de Producción");
+
+                Server devServer = new Server();
+                devServer.setUrl("http://localhost:8080/challenge/api/"); // Usa HTTP para desarrollo si lo necesitas
+                devServer.setDescription("Servidor de Desarrollo");
+                return new OpenAPI().servers(List.of(devServer, prodServer));
+        }
 }

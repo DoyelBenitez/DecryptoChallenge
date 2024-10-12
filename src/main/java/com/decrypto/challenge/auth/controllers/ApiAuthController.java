@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Tag(name = "Autenticación", description = "API para recuperar el token de autenticación. Las credenciales son las mismas que se usaron para entrar a Swagger")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class ApiAuthController {
 
     @Autowired
