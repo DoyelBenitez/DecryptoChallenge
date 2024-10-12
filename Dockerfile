@@ -13,6 +13,8 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
+RUN mkdir -p /secret && chmod 0777 /secret
+
 COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 
 EXPOSE 8080

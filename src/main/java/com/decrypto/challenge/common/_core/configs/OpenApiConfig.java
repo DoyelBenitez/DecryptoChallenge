@@ -1,4 +1,4 @@
-package com.decrypto.challenge.core.configs;
+package com.decrypto.challenge.common._core.configs;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "Decrypto Challenge API",
                 version = "1.0.0",
-                description = "API for Decrypto Challenge"
+                description = "API para Decrypto Challenge"
         )
 )
 @SecurityScheme(

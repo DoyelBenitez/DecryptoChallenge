@@ -7,7 +7,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
 @ContextConfiguration(classes = ChallengeApplicationTests.class)
-@ActiveProfiles("test")
 class ChallengeApplicationTests {
 
 	@Test

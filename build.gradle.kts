@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.*
-
 plugins {
 	java
 	id("org.springframework.boot") version "3.3.4"
@@ -35,14 +32,25 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-	compileOnly("org.projectlombok:lombok")
+	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	compileOnly("org.projectlombok:lombok")
+
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
-	annotationProcessor("org.projectlombok:lombok")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("com.h2database:h2")
+	testImplementation("org.mockito:mockito-core:5.14.1")
+	testImplementation("org.mockito:mockito-junit-jupiter:5.14.1")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	annotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<Test> {
@@ -50,10 +58,11 @@ tasks.withType<Test> {
 }
 
 tasks.test {
-	val envFile = file("src/main/resources/credentials/credential-dev.env")
-	if (envFile.exists()) {
-		val props = Properties()
-		props.load(FileInputStream(envFile))
-		props.forEach { key, value -> environment(key as String, value as String) }
+	systemProperty("spring.profiles.active", "test")
+	testLogging {
+		events("PASSED", "FAILED", "SKIPPED")
+		exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+		showStandardStreams = true
 	}
 }
+

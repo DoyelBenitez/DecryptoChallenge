@@ -1,7 +1,25 @@
-# application-dev.properties
+# application-dev.yaml
+spring:
+  security:
+    user:
+      name: ${API_USER}
+      password: ${API_PASSWORD}
+
+  # Configuracion de PostgreSQL
+  datasource:
+    url: jdbc:postgresql://${PDB_HOST}:${PDB_PORT}/${PDB_NAME}
+    username: ${PDB_USERNAME}
+    password: ${PDB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 # Configuración de MongoDB
-spring:
   data:
     mongodb:
       host: ${MDB_HOST}
@@ -10,13 +28,7 @@ spring:
       username: ${MDB_USERNAME}
       password: ${MDB_PASSWORD}
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-
-#Configuracion de TokenJWT
+# Configuracion de JWT
 security:
   jwt:
-    secret-key-path-prod: '../webapps/tesis/WEB-INF/classes/jwtSecret.key'
+    secret-key-path: 'jwtSecret.key'

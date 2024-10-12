@@ -8,9 +8,9 @@ if [ -z "$1" ]; then
 fi
 
 echo "============Ejecutando...============"
-
-param=$1
+set -e
 
 docker-compose build --no-cache backend
 
+param=$1
 ./docker-compose-up.sh $param

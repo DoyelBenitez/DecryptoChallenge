@@ -7,6 +7,7 @@ build/
 src/main/resources/credentials/credential-dev.env
 src/main/resources/credentials/credential-prod.env
 src/main/resources/credentials/credential-docker.env
+jwtSecret.key
 
 ### STS ###
 .apt_generated
