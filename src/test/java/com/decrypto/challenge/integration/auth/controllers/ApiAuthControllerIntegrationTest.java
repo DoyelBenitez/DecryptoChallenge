@@ -53,7 +53,7 @@ public class ApiAuthControllerIntegrationTest {
         userAccountDto.setUsername("usuario_test");
         userAccountDto.setPassword("password123");
 
-        this.mockMvc.perform(post("/api/auth/v1/signIn")
+        this.mockMvc.perform(post("/auth/v1/signIn")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(convertToJson(userAccountDto)))
                 .andExpect(status().isOk())
