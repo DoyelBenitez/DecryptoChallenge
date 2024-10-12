@@ -40,7 +40,7 @@ public class ApiAuthController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(mediaType = "application/vnd.api+json"))
     })
-    @PostMapping(path = "v1/signIn", produces = "application/vnd.api+json")
+    @PostMapping(path = "v1/signIn", consumes = "application/json",  produces = "application/vnd.api+json")
     public ResponseEntity<?> signIn(@RequestBody @Valid UserAccountDTO userAccountDto) {
         try {
             Map<String, Object> map = this.authService.signIn(userAccountDto);
