@@ -11,6 +11,7 @@ security:
   jwt:
     token:
       expire-in-milliseconds: 3600000
+    key-dynamic: ${KEY_DYNAMIC}
 
 # Log Configuration
 logging:
@@ -23,7 +24,7 @@ logging:
       SQL: 'DEBUG'
       apache:
         coyote:
-          http11: 'DEBUG'  # Nivel de log para HTTP11
+          http11: 'DEBUG'
       # type: 'TRACE'
       tool:
       # schema: 'TRACE'

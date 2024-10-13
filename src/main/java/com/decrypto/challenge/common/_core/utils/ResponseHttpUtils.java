@@ -48,6 +48,37 @@ public class ResponseHttpUtils {
     }
 
     /**
+     * httpStatusCreated
+     */
+
+    public static ResponseEntity<?> httpStatusCreated() {
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    public static ResponseEntity<Object> httpStatusCreated(String i18nKey) {
+        String message = MessageUtils.searchMessage(i18nKey);
+        ObjectNode jsonApi = JsonApiGenerator
+                .create()
+                .generateJsonApi(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(jsonApi.toPrettyString());
+    }
+
+    public static ResponseEntity<Object> httpStatusCreated(Object object) {
+        ObjectNode jsonApi = JsonApiGenerator
+                .create()
+                .generateJsonApi(object);
+        return ResponseEntity.status(HttpStatus.CREATED).body(jsonApi.toPrettyString());
+    }
+
+    public static ResponseEntity<Object> httpStatusCreated(Object object, String i18nKey) {
+        String message = MessageUtils.searchMessage(i18nKey);
+        ObjectNode jsonApi = JsonApiGenerator
+                .create()
+                .generateJsonApi(object, message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(jsonApi.toPrettyString());
+    }
+
+    /**
      * httpStatusBadRequest
      */
 
@@ -139,4 +170,6 @@ public class ResponseHttpUtils {
                 .generateJsonApi(object, message);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jsonApi.toPrettyString());
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.decrypto.challenge.auth.dao.interfaces;
+package com.decrypto.challenge.auth.daos.interfaces;
 
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;
 

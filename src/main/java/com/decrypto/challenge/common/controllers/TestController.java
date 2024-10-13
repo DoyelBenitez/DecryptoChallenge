@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController {
 
-    @GetMapping(path = "/ping", produces = "application/vnd.api+json")
+    @GetMapping(path = "/ping")
     public ResponseEntity<?> test() {
         return ResponseEntity.ok("pong");
     }

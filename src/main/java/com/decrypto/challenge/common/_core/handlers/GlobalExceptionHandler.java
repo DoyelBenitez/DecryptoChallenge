@@ -1,6 +1,8 @@
 package com.decrypto.challenge.common._core.handlers;
 
 import com.decrypto.challenge.common._core.jsonApi.JsonApiErrors;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +11,11 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,6 +43,18 @@ public class GlobalExceptionHandler {
                 ));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).
                 body(CommonErrorsHandler.newBadRequest(errorMessages));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ModelAndView handleNoResourceFoundException(Exception ex, HttpServletRequest request) {
+        log.error("No Resource Found error: {}", ex.getMessage());
+        String uri = "/" + request.getContextPath() + "/error";
+        ModelAndView mav = new ModelAndView("redirect:/error");
+        mav.addObject("status", HttpStatus.NOT_FOUND.value());
+        mav.addObject("error", "No Resource Found");
+        mav.addObject("message", ex.getMessage());
+        mav.addObject("path", request.getRequestURI());
+        return mav;
     }
 
     @ExceptionHandler(Exception.class)

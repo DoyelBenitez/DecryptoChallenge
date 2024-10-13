@@ -33,11 +33,11 @@ public class OpenApiConfig {
         @Bean
         public OpenAPI customOpenAPI() {
                 Server prodServer = new Server();
-                prodServer.setUrl("https://decryptochallenge-production.up.railway.app/challenge/api/"); // Usa HTTPS aquí
+                prodServer.setUrl("https://decryptochallenge-production.up.railway.app/challenge/api/");
                 prodServer.setDescription("Servidor de Producción");
 
                 Server devServer = new Server();
-                devServer.setUrl("http://localhost:8080/challenge/api/"); // Usa HTTP para desarrollo si lo necesitas
+                devServer.setUrl("http://localhost:8080/challenge/api/");
                 devServer.setDescription("Servidor de Desarrollo");
                 return new OpenAPI().servers(List.of(devServer, prodServer));
         }

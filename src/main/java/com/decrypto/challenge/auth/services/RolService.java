@@ -1,6 +1,6 @@
 package com.decrypto.challenge.auth.services;
 
-import com.decrypto.challenge.auth.dao.interfaces.IRolDAO;
+import com.decrypto.challenge.auth.daos.interfaces.IRolDAO;
 import com.decrypto.challenge.auth.dtos.RolDTO;
 import com.decrypto.challenge.auth.services.interfaces.IRolService;
 import com.decrypto.challenge.common._core.exceptions.ServiceExceptionP;

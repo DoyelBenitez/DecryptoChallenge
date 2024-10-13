@@ -1,13 +1,12 @@
 package com.decrypto.challenge.auth.spring;
 
-import com.decrypto.challenge.auth.dao.UserAccountDAO;
+import com.decrypto.challenge.auth.daos.UserAccountDAO;
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**

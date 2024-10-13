@@ -1,4 +1,4 @@
-package com.decrypto.challenge.unit.auth.services;
+package com.decrypto.challenge.unit.auth;
 
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;
 import com.decrypto.challenge.auth.services.UserAccountService;

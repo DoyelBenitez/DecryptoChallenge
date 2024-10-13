@@ -1,7 +1,6 @@
 package com.decrypto.challenge.auth._core.configs;
 
 import com.decrypto.challenge.auth._core.filters.FiltersConfig;
-import jakarta.servlet.FilterConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class AuthSecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -40,7 +39,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain swaggerSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/","swagger-ui/**", "/v3/api-docs/**", "/login", "/logout")
+                .securityMatcher("/","swagger-ui/**", "/v3/api-docs/**", "/login", "/logout", "/error")
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -57,22 +56,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Order(2)
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/auth/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                        .requestMatchers("/favicon**").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/test/ping").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
-
                         .requestMatchers("/auth/v1/signIn").permitAll()
+                        .anyRequest().denyAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
-                .with(new FiltersConfig(), Customizer.withDefaults());
-
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 

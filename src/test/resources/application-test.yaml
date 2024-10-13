@@ -17,8 +17,6 @@ spring:
 security:
   jwt:
     secret-key-path: 'jwtSecret.key'
-
-
-
-
-
+    token:
+      expire-in-milliseconds: 3600000
+    key-dynamic: ${KEY_DYNAMIC:true}

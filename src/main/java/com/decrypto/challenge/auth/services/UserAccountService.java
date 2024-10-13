@@ -1,6 +1,6 @@
 package com.decrypto.challenge.auth.services;
 
-import com.decrypto.challenge.auth.dao.interfaces.IUserAccountDAO;
+import com.decrypto.challenge.auth.daos.interfaces.IUserAccountDAO;
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;
 import com.decrypto.challenge.auth.services.interfaces.IUserAccountService;
 import com.decrypto.challenge.common._core.exceptions.ServiceExceptionP;

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -21,13 +22,14 @@ import java.util.Map;
 /**
  * @Author dbenitez
  */
+@AllArgsConstructor
 @Tag(name = "Autenticación", description = "API para recuperar el token de autenticación. Las credenciales son las mismas que se usaron para entrar a Swagger")
 @RestController
 @RequestMapping("/auth")
 public class ApiAuthController {
 
     @Autowired
-    private IAuthService authService;
+    private final IAuthService authService;
 
     @Operation(summary = "Iniciar sesión", description = "Autentica y devuelve un token JWT")
     @ApiResponses(value = {

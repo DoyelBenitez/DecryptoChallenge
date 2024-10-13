@@ -25,10 +25,10 @@
                     <h2 class="text-center">Lo sentimos, ocurrió un error</h2>
                 </div>
                 <div class="card-body">
-                    <p><strong>Status:</strong> <span th:text="${status}"></span></p>
-                    <p><strong>Error:</strong> <span th:text="${error}"></span></p>
-                    <p><strong>Mensaje:</strong> <span th:text="${message}"></span></p>
-                    <p><strong>Ruta:</strong> <span th:text="${path}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${param.status} ?: ${status} "></span></p>
+                    <p><strong>Error:</strong> <span th:text="${param.error}  ?: ${error}"></span></p>
+                    <p><strong>Mensaje:</strong> <span th:text="${param.message}  ?: ${message}"></span></p>
+                    <p><strong>Ruta:</strong> <span th:text="${param.path} ?: ${path}"></span></p>
                 </div>
                 <div class="card-footer text-center">
                     <a th:href="@{/login}" class="btn btn-primary">Regresar al inicio</a>

@@ -1,4 +1,4 @@
-package com.decrypto.challenge.unit.auth.controllers;
+package com.decrypto.challenge.unit.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -22,6 +22,8 @@ public class TokenConfig {
 
     @Value("${security.jwt.secret-key-path}")
     private String secretKeyPath;
+    @Value("${security.jwt.key-dynamic}")
+    private Boolean keyDynamic;
     @Value("${security.jwt.token.expire-in-milliseconds}")
     private long expirationMilliseconds;
 
@@ -41,9 +43,15 @@ public class TokenConfig {
     private void generateSecretKey() {
         try {
             String secretKeyPath = this.resolveSecretKeyPath();
-            this.deleteIfExist(secretKeyPath);
-            this.key = generateKey();
-            this.saveKey(this.key, secretKeyPath);
+            if (this.keyDynamic) {
+                this.deleteIfExist(secretKeyPath);
+            }
+            if (!this.existFile(secretKeyPath)) {
+                this.key = generateKey();
+                this.saveKey(this.key, secretKeyPath);
+            } else {
+                this.key = Files.readString(Path.of(secretKeyPath));
+            }
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
             throw new RuntimeException("No se pudo cargar o guardar jwtSecret.key", e);
@@ -65,6 +73,10 @@ public class TokenConfig {
 
     private void deleteIfExist(String secretKeyPath) throws IOException {
         Files.deleteIfExists(Path.of(secretKeyPath));
+    }
+
+    private Boolean existFile(String secretKeyPath) {
+        return Files.exists(Path.of(secretKeyPath));
     }
 
     private String resolveSecretKeyPath() {

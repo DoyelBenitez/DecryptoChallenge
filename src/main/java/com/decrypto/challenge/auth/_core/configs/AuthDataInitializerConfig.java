@@ -1,9 +1,8 @@
 package com.decrypto.challenge.auth._core.configs;
-import com.decrypto.challenge.auth.dao.interfaces.IRolDAO;
-import com.decrypto.challenge.auth.dao.interfaces.IUserAccountDAO;
+import com.decrypto.challenge.auth.daos.interfaces.IRolDAO;
+import com.decrypto.challenge.auth.daos.interfaces.IUserAccountDAO;
 import com.decrypto.challenge.auth.dtos.RolDTO;
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;
-import com.decrypto.challenge.common._core.exceptions.ServiceExceptionP;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @AllArgsConstructor
 @Configuration
-public class DataInitializerConfig {
+public class AuthDataInitializerConfig {
 
     @Autowired
     private final IUserAccountDAO userAccountDao;
@@ -23,16 +22,16 @@ public class DataInitializerConfig {
     private final IRolDAO rolDao;
 
     @Bean
-    public CommandLineRunner initDatabase() {
+    public CommandLineRunner initAuthDatabase() {
         return args -> {
-            createRolIfNotExists("Admin");
-            createRolIfNotExists("User");
-            createUserIfNotExists("decrypto", "$2a$12$ofBYa2AJ0vx3WStrW56qeOJwqj/0YN1k.JYjy46O6CvPOqqzHUV4G", "Admin");
-            createUserIfNotExists("user", "$2a$12$ofBYa2AJ0vx3WStrW56qeOJwqj/0YN1k.JYjy46O6CvPOqqzHUV4G", "User");
+            createIfNotExists("Admin");
+            createIfNotExists("User");
+            createIfNotExists("decrypto", "$2a$12$ofBYa2AJ0vx3WStrW56qeOJwqj/0YN1k.JYjy46O6CvPOqqzHUV4G", "Admin");
+            createIfNotExists("user", "$2a$12$ofBYa2AJ0vx3WStrW56qeOJwqj/0YN1k.JYjy46O6CvPOqqzHUV4G", "User");
         };
     }
 
-    private void createRolIfNotExists(String name) {
+    private void createIfNotExists(String name) {
         if (!this.rolDao.existsBy(name)) {
             RolDTO rolDto = new RolDTO();
             rolDto.setName(name);
@@ -43,7 +42,7 @@ public class DataInitializerConfig {
         }
     }
 
-    private void createUserIfNotExists(String username, String password, String role) {
+    private void createIfNotExists(String username, String password, String role) {
         if (!this.userAccountDao.existBy(username)) {
             RolDTO rolDto = this.rolDao.findBy(role);
             UserAccountDTO UserAccountDto = new UserAccountDTO();

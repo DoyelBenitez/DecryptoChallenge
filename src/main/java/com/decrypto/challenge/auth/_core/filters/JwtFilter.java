@@ -1,7 +1,9 @@
 package com.decrypto.challenge.auth._core.filters;
 
+import com.decrypto.challenge.auth._core.exceptions.JwtExceptionP;
 import com.decrypto.challenge.auth._core.providers.JwtTokenProvider;
 import com.decrypto.challenge.common._core.utils.JacksonConverterUtils;
+import com.decrypto.challenge.common._core.utils.ResponseHttpUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -29,45 +32,47 @@ import java.util.List;
 @Slf4j
 public class JwtFilter extends GenericFilterBean {
 
-    private final List<String> rutasPermitidasSinToken = List.of(
-            "/decrypto/api"
-    );
-
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         log.info("Method: {}", request.getMethod());
         log.info("Request: {}", request.getRequestURL());
-        if (/*!this.accessURLWithoutToken(request)*/ false) {
-            try {
-                Authentication authentication = JwtTokenProvider.getAuthentication(request);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                filterChain.doFilter(req, res);
-            } catch (Exception error) {
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } else {
+        try {
+            Authentication authentication = JwtTokenProvider.getAuthentication(request);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(req, res);
+        } catch (JwtExceptionP error) {
+            this.generateResponse(response, "generic.invalidToken", HttpStatus.UNAUTHORIZED);
+        } catch (Exception error) {
+            this.generateResponse(response, "error.http500", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Funcion que se encarga de filtrar los endpoints que pueden pasar sin token
+     * Genera la respuesta HTTP
      *
-     * @param httpRequest-
-     * @return True, si la url no requiere token
+     * @param response-
+     * @param keyMsj-
+     * @throws IOException-
      */
-    private Boolean accessURLWithoutToken(HttpServletRequest httpRequest) {
-        if (httpRequest.getMethod().equals("OPTIONS")) {
-            return true;
+    private void generateResponse(HttpServletResponse response, String keyMsj, HttpStatus state) throws IOException {
+        ResponseEntity<?> responseEntity = null;
+        if (keyMsj != null) {
+            responseEntity = switch (state) {
+                case HttpStatus.BAD_REQUEST -> ResponseHttpUtils.httpStatusBadRequest(keyMsj);
+                case HttpStatus.UNAUTHORIZED -> ResponseHttpUtils.httpStatusUnauthorized(keyMsj);
+                case HttpStatus.INTERNAL_SERVER_ERROR -> ResponseHttpUtils.httpStatusInternalServerError(keyMsj);
+                default -> ResponseHttpUtils.httpStatusBadRequest(keyMsj);
+            };
         }
-        for (String ruta: this.rutasPermitidasSinToken) {
-            if (httpRequest.getRequestURI().equals(ruta)) {
-                return true;
-            }
-        }
-        return false;
+        assert responseEntity != null;
+        log.info("JSON Response: {}", responseEntity.getBody());
+        response.setStatus(state.value());
+        response.setContentType("application/vnd.api+json");
+        PrintWriter out = response.getWriter();
+        out.print(responseEntity.getBody());
+        out.flush();
     }
 
 }

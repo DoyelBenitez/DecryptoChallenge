@@ -1,6 +1,6 @@
-package com.decrypto.challenge.auth.dao;
+package com.decrypto.challenge.auth.daos;
 
-import com.decrypto.challenge.auth.dao.interfaces.IRolDAO;
+import com.decrypto.challenge.auth.daos.interfaces.IRolDAO;
 import com.decrypto.challenge.auth.dtos.RolDTO;
 import com.decrypto.challenge.auth.entities.Rol;
 import com.decrypto.challenge.auth.repositories.IRolRepository;

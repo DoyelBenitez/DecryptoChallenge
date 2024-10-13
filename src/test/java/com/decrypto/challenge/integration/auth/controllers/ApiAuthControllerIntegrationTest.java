@@ -33,7 +33,6 @@ public class ApiAuthControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private IUserAccountService userAccountService;
     @Autowired

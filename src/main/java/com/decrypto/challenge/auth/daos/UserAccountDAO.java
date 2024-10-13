@@ -1,7 +1,7 @@
-package com.decrypto.challenge.auth.dao;
+package com.decrypto.challenge.auth.daos;
 
 import com.decrypto.challenge.auth._core.mapping.Mapping_UserAccount;
-import com.decrypto.challenge.auth.dao.interfaces.IUserAccountDAO;
+import com.decrypto.challenge.auth.daos.interfaces.IUserAccountDAO;
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;
 import com.decrypto.challenge.auth.entities.UserAccount;
 import com.decrypto.challenge.auth.repositories.IUserAccountRepository;
