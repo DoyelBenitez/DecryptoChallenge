@@ -28,6 +28,8 @@ public class JsonApiGenerator {
 
     private final Set<Long> includedIds = new HashSet<>();
 
+    private final HashMap<String, HashSet<Long>> mapRepeated = new HashMap<String, HashSet<Long>>();
+
     private JsonApiGenerator() {}
 
     /**
@@ -94,10 +96,10 @@ public class JsonApiGenerator {
                 dataArray = jsonApiNode.putArray("data");
                 for (Object item : (Collection<?>) object) {
                     dataNode = dataArray.addObject();
-                    processObjectOrMap(item, dataNode, jsonApiNode);
+                    this.processObjectOrMap(item, dataNode, jsonApiNode);
                 }
             } else {
-                processObjectOrMap(object, dataNode, jsonApiNode);
+                this.processObjectOrMap(object, dataNode, jsonApiNode);
             }
             return jsonApiNode;
         } catch (IllegalAccessException ex) {
@@ -259,6 +261,7 @@ public class JsonApiGenerator {
      */
     private void processRelationshipAndInclude(Object relatedObject, Object relationshipNode, ArrayNode includedNode) throws IllegalAccessException {
         Long id = null;
+        String nameClazz = relatedObject.getClass().getSimpleName();
         try {
             Field field = relatedObject.getClass().getField("id");
             field.setAccessible(true);
@@ -266,12 +269,15 @@ public class JsonApiGenerator {
         } catch (IllegalAccessException | NoSuchFieldException e) {
             log.error("Error al acceder al campo 'id' del objeto relacionado: {}", e.getMessage());
         }
-        if (this.includedIds.add(id)) {
-            ObjectNode relationshipDataNode = createRelationshipNode(relatedObject, relationshipNode);
-            ObjectNode includedItem = createIncludedItem(relatedObject, includedNode);
-            ObjectNode attributesNode = includedItem.putObject("attributes");
-            ObjectNode relationshipsNode = objectMapper.createObjectNode();
-            this.processFields(relatedObject, attributesNode, relationshipsNode, includedNode);
+        if (!this.mapRepeated.containsKey(nameClazz)) {
+            this.mapRepeated.put(nameClazz, new HashSet<>());
+        }
+        this.createRelationshipNode(relatedObject, relationshipNode);
+        if (this.mapRepeated.get(nameClazz).add(id)) {
+        ObjectNode includedItem = createIncludedItem(relatedObject, includedNode);
+        ObjectNode attributesNode = includedItem.putObject("attributes");
+        ObjectNode relationshipsNode = objectMapper.createObjectNode();
+        this.processFields(relatedObject, attributesNode, relationshipsNode, includedNode);
             if (!relationshipsNode.isEmpty()) {
                 includedItem.set("relationships", relationshipsNode);
             }

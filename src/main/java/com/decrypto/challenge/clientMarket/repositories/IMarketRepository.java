@@ -18,4 +18,5 @@ public interface IMarketRepository extends CrudRepository<Market, Long> {
     Optional<Market> findMarketByCode(String code);
     Optional<Market> findMarketByCodeAndDeletedIsFalse(String code);
     List<Market> findAllByDeletedIsFalse();
+    Optional<List<Market>> findAllByCodeInAndDeletedIsFalse(List<String> code);
 }

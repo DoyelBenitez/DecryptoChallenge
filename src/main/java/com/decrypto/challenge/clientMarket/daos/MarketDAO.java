@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,6 +77,12 @@ public class MarketDAO implements IMarketDAO {
     public List<MarketDTO> findAll() {
         List<Market> markets = this.marketRepository.findAllByDeletedIsFalse();
         return Mapping.fullMapping(markets);
+    }
+
+    public List<MarketDTO> findAll(List<String> codes) {
+        return this.marketRepository.findAllByCodeInAndDeletedIsFalse(codes)
+                .map(Mapping::fullMapping)
+                .orElse(new ArrayList<>());
     }
 
     public Boolean existsBy(String code) {

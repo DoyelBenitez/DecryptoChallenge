@@ -74,6 +74,13 @@ public interface IMarketDAO {
     List<MarketDTO> findAll();
 
     /**
+     * Busca todos los mercados no eliminados por sus códigos.
+     * @param codes los códigos de los mercados a buscar
+     * @return una lista de DTOs de mercados no eliminados
+     */
+    List<MarketDTO> findAll(List<String> codes);
+
+    /**
      * Verifica si un mercado existe por su código.
      *
      * @param code el código del mercado a verificar

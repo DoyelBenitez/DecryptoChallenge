@@ -99,10 +99,12 @@ public class MarketService extends AbstractService implements IMarketService {
         return markets;
     }
 
-    private List<MarketCountryDTO> findAllCountry(List<Long> ids) throws ServiceExceptionP {
-        List<MarketCountryDTO> marketCountryDtoList = this.countryClient.findAll(ids);
-        this.checkNull("country.notExist", marketCountryDtoList);
-        return marketCountryDtoList;
+    public List<MarketDTO> findAll(List<String> codes) throws ServiceExceptionP {
+        this.checkNull("generic.null", codes);
+        codes = codes.stream()
+                .map(AppUtils::convertToUpperCase)
+                .collect(Collectors.toList());
+        return this.marketDao.findAll(codes);
     }
 
     public Boolean existsBy(String code) throws ServiceExceptionP {
@@ -128,6 +130,12 @@ public class MarketService extends AbstractService implements IMarketService {
         MarketCountryDTO marketCountryDto = this.countryClient.findBy(marketDto.getCountry().getId());
         this.checkNull("country.notExist", marketCountryDto);
         marketDto.setCountry(marketCountryDto);
+    }
+
+    private List<MarketCountryDTO> findAllCountry(List<Long> ids) throws ServiceExceptionP {
+        List<MarketCountryDTO> marketCountryDtoList = this.countryClient.findAll(ids);
+        this.checkNull("country.notExist", marketCountryDtoList);
+        return marketCountryDtoList;
     }
 
 }

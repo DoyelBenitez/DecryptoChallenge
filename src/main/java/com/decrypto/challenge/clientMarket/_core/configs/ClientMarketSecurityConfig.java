@@ -21,9 +21,10 @@ public class ClientMarketSecurityConfig {
     @Bean
     public SecurityFilterChain clientMarketSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/market/**")
+                .securityMatcher("/market/**", "/client/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/market/v1/markets/**").permitAll()
+                        .requestMatchers("/client/v1/clients/**").permitAll()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

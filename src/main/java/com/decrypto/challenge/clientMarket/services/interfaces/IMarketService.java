@@ -54,6 +54,14 @@ public interface IMarketService {
     List<MarketDTO> findAll() throws ServiceExceptionP;
 
     /**
+     * Recupera todos los mercados por sus códigos.
+     * @param codes los códigos de los mercados a buscar
+     * @return una lista de todos los DTOs de mercados
+     * @throws ServiceExceptionP si hay algún problema durante el proceso
+     */
+    List<MarketDTO> findAll(List<String> codes) throws ServiceExceptionP;
+
+    /**
      * Verifica si un mercado existe por su código.
      *
      * @param code el código del mercado a verificar

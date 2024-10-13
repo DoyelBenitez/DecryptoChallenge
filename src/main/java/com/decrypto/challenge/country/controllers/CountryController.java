@@ -24,7 +24,7 @@ import java.util.List;
  * @Author dbenitez
  */
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Países", description = "API para administrar los países del sistema")
+@Tag(name = "Paises", description = "API para la gestión de paises")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/country/v1/countries")
@@ -97,17 +97,29 @@ public class CountryController {
         }
     }
 
-    @Operation(summary = "Buscar un país por nombre o listar todos", description = "Permite buscar un país específico por su nombre o listar todos los países.")
+    @Operation(
+            summary = "Buscar un país por nombre o ID, o listar todos",
+            description = "Permite buscar un país específico por su nombre o ID. Si no se especifica ningún criterio, se listan todos los países."
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "País(es) encontrado(s)", content = @Content(schema = @Schema(implementation = CountryDTO.class))),
             @ApiResponse(responseCode = "400", description = "Error de validación o de lógica de negocio", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping(produces = "application/vnd.api+json")
-    public ResponseEntity<?> find(@Parameter(description = "Nombre del país a buscar", required = false) @RequestParam(required = false) String name) {
+    public ResponseEntity<?> find(
+            @Parameter(description = "Nombre del país a buscar", required = false)
+            @RequestParam(required = false) String name,
+
+            @Parameter(description = "ID del país a buscar", required = false)
+            @RequestParam(required = false) Long id
+    ) {
         try {
             if (name != null && !name.isEmpty()) {
                 CountryDTO countryDto = this.countryService.find(name);
+                return ResponseHttpUtils.httpStatusOK(countryDto);
+            } else if (id != null) {
+                CountryDTO countryDto = this.countryService.find(id);
                 return ResponseHttpUtils.httpStatusOK(countryDto);
             } else {
                 List<CountryDTO> countryDtoList = this.countryService.findAll();
