@@ -32,6 +32,13 @@ public class AppUtils {
         return titleCase.toString().trim();
     }
 
+    public static String convertToUpperCase(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.toUpperCase().replaceAll("[^A-Z0-9]", "_").trim();
+    }
+
     public static String convertToJson(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

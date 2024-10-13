@@ -3,6 +3,7 @@ package com.decrypto.challenge.country.repositories;
 import com.decrypto.challenge.country.entities.Country;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,5 @@ public interface ICountryRepository extends JpaRepository<Country, Long> {
     Optional<Country> findCountryByName(String name);
     Optional<Country> findCountryByNameAndDeletedIsFalse(String name);
     List<Country> findAllByDeletedIsFalse();
+    List<Country> findAllByIdIn(List<Long> id);
 }

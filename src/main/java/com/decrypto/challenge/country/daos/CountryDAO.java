@@ -41,10 +41,12 @@ public class CountryDAO implements ICountryDAO {
     }
 
     public void recovery(String name) {
-        Country country = this.countryRepository.findCountryByName(name)
+        this.countryRepository.findCountryByName(name)
+                .map(country -> {
+                    country.setDeleted(false);
+                    return this.countryRepository.save(country);
+                })
                 .orElseThrow(() -> new EntityNotFoundException("El país no existe"));
-        country.setDeleted(false);
-        this.countryRepository.save(country);
     }
 
     public CountryDTO update(String name, CountryDTO countryDto) {
@@ -54,9 +56,15 @@ public class CountryDAO implements ICountryDAO {
         return Mapping.fullMapping(country);
     }
 
-    public CountryDTO findCountry(String name) {
+    public CountryDTO find(String name) {
         Country country = this.findCountryByName(name);
         return Mapping.fullMapping(country);
+    }
+
+    public CountryDTO find(Long id) {
+        return this.countryRepository.findCountryById(id)
+                .map(Mapping::fullMapping)
+                .orElseThrow(() -> new EntityNotFoundException("El país no existe"));
     }
 
     public List<CountryDTO> findAll() {
@@ -64,8 +72,17 @@ public class CountryDAO implements ICountryDAO {
         return Mapping.fullMapping(countries);
     }
 
+    public List<CountryDTO> findAll(List<Long> ids) {
+        List<Country> countries = this.countryRepository.findAllByIdIn(ids);
+        return Mapping.fullMapping(countries);
+    }
+
     public Boolean existsBy(String name) {
         return this.countryRepository.existsCountryByName(name);
+    }
+
+    public Boolean existsBy(Long id) {
+        return this.countryRepository.existsById(id);
     }
 
     public Boolean existsNotDeletedBy(String name) {

@@ -61,16 +61,31 @@ public class CountryService extends AbstractService implements ICountryService {
     public CountryDTO find(String name) throws ServiceExceptionP {
         this.checkNull("generic.null", name);
         name = AppUtils.convertToTitleCase(name);
-        return this.countryDao.findCountry(name);
+        return this.countryDao.find(name);
+    }
+
+    public CountryDTO find(Long id) throws ServiceExceptionP {
+        this.checkNull("generic.null", id);
+        return this.countryDao.find(id);
     }
 
     public List<CountryDTO> findAll() throws ServiceExceptionP {
         return this.countryDao.findAll();
     }
 
+    public List<CountryDTO> findAll(List<Long> ids) throws ServiceExceptionP {
+        this.checkNull("generic.null", ids);
+        return this.countryDao.findAll(ids);
+    }
+
     public Boolean existsBy(String name) throws ServiceExceptionP {
         this.checkNull("generic.null", name);
         return this.countryDao.existsBy(name);
+    }
+
+    public Boolean existsBy(Long id) throws ServiceExceptionP {
+        this.checkNull("generic.null", id);
+        return this.countryDao.existsBy(id);
     }
 
     private void recover(String name) throws ServiceExceptionP {

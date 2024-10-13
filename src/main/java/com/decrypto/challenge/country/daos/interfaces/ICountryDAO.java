@@ -57,7 +57,16 @@ public interface ICountryDAO {
      * @return un objeto CountryDTO que representa el país encontrado.
      * @throws RuntimeException si el país no existe.
      */
-    CountryDTO findCountry(String name);
+    CountryDTO find(String name);
+
+    /**
+     * Encuentra y devuelve un país específico por su id.
+     *
+     * @param id el id del país que se desea buscar.
+     * @return un objeto CountryDTO que representa el país encontrado.
+     * @throws RuntimeException si el país no existe.
+     */
+    CountryDTO find(Long id);
 
     /**
      * Recupera y devuelve una lista de todos los países.
@@ -67,11 +76,25 @@ public interface ICountryDAO {
     List<CountryDTO> findAll();
 
     /**
+     * Recupera y devuelve una lista de países basados en los ids proporcionados.
+     * @param ids una lista de ids de países que se desean recuperar.
+     * @return una lista de objetos CountryDTO que representan los países encontrados.
+     */
+    List<CountryDTO> findAll(List<Long> ids);
+
+    /**
      * Verifica si existe o no un pais con el nombre proporcionado.
      * @param name el nombre del país
      * @return true si el país existe, false si no.
      */
     Boolean existsBy(String name);
+
+    /**
+     * Verifica si existe o no un pais con el id proporcionado.
+     * @param id el id del país
+     * @return true si el país existe, false si no.
+     */
+    Boolean existsBy(Long id);
 
     /**
      * Verifica si existe un país eliminado con el nombre proporcionado.

@@ -3,6 +3,7 @@ package com.decrypto.challenge.common._core.jsonApi;
 import com.decrypto.challenge.common._core.jsonApi.anotations.JsonApiId;
 import com.decrypto.challenge.common._core.jsonApi.anotations.JsonApiRelationships;
 import com.decrypto.challenge.common._core.jsonApi.anotations.JsonApiType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,9 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 /**
  * Generador de estructuras JSON API para objetos de transferencia de datos (DTO).
@@ -25,6 +25,8 @@ import java.util.Optional;
 public class JsonApiGenerator {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final Set<Long> includedIds = new HashSet<>();
 
     private JsonApiGenerator() {}
 
@@ -116,10 +118,19 @@ public class JsonApiGenerator {
         if (object instanceof Map<?, ?>) {
             processMap((Map<?, ?>) object, dataNode);
         } else {
-            ArrayNode includedNode = jsonApiNode.putArray("included");
+            ArrayNode includedNode = null;
+            if (jsonApiNode.get("included") != null && !jsonApiNode.get("included").isEmpty()) {
+                includedNode = (ArrayNode) jsonApiNode.get("included");
+            } else {
+                includedNode = jsonApiNode.putArray("included");
+            }
+
             addIdAndType(object, dataNode);
             addAttributes(object, dataNode);
-            processRelationships(object, dataNode, includedNode);
+            this.processRelationships(object, dataNode, includedNode);
+            if (jsonApiNode.get("included").isEmpty()) {
+                // jsonApiNode.remove("included");
+            }
         }
     }
 
@@ -211,7 +222,7 @@ public class JsonApiGenerator {
                 }
             }
         }
-        if (!relationshipsNode.isEmpty()) {
+        if (!relationshipsNode.isEmpty()) { //  && this.hasNoEmptyRelationships(relationshipsNode)
             dataNode.set("relationships", relationshipsNode);
         }
     }
@@ -247,13 +258,23 @@ public class JsonApiGenerator {
      * @throws IllegalAccessException Si ocurre un error al acceder a los campos del objeto.
      */
     private void processRelationshipAndInclude(Object relatedObject, Object relationshipNode, ArrayNode includedNode) throws IllegalAccessException {
-        ObjectNode relationshipDataNode = createRelationshipNode(relatedObject, relationshipNode);
-        ObjectNode includedItem = createIncludedItem(relatedObject, includedNode);
-        ObjectNode attributesNode = includedItem.putObject("attributes");
-        ObjectNode relationshipsNode = objectMapper.createObjectNode();
-        this.processFields(relatedObject, attributesNode, relationshipsNode, includedNode);
-        if (!relationshipsNode.isEmpty()) {
-            includedItem.set("relationships", relationshipsNode);
+        Long id = null;
+        try {
+            Field field = relatedObject.getClass().getField("id");
+            field.setAccessible(true);
+            id = (Long) field.get(relatedObject);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            log.error("Error al acceder al campo 'id' del objeto relacionado: {}", e.getMessage());
+        }
+        if (this.includedIds.add(id)) {
+            ObjectNode relationshipDataNode = createRelationshipNode(relatedObject, relationshipNode);
+            ObjectNode includedItem = createIncludedItem(relatedObject, includedNode);
+            ObjectNode attributesNode = includedItem.putObject("attributes");
+            ObjectNode relationshipsNode = objectMapper.createObjectNode();
+            this.processFields(relatedObject, attributesNode, relationshipsNode, includedNode);
+            if (!relationshipsNode.isEmpty()) {
+                includedItem.set("relationships", relationshipsNode);
+            }
         }
     }
 
@@ -400,6 +421,21 @@ public class JsonApiGenerator {
             }
         }
         return field.getName().toLowerCase();
+    }
+
+    /**
+     * Verifica si 'relationshipsNode' contiene alguna relación cuyo nodo 'data' no esté vacío.
+     *
+     * @param relationshipsNode el nodo de relaciones a verificar
+     * @return true si hay al menos una relación con datos en el nodo 'data', de lo contrario, false
+     */
+    private Boolean hasNoEmptyRelationships(ObjectNode relationshipsNode) {
+        // Recorre cada relación en 'relationshipsNode' y verifica que 'data' no esté vacío
+        return relationshipsNode.fields().hasNext() && StreamSupport.stream(relationshipsNode.spliterator(), false)
+                .anyMatch(field -> {
+                    JsonNode dataNode = field.get("data");
+                    return dataNode != null && dataNode.isArray() && !dataNode.isEmpty();
+                });
     }
 
 }
