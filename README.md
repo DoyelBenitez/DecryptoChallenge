@@ -58,14 +58,17 @@ Benitez Doyel Franco
 
 ## Run-APP
 
-1. En la raiz del proyecto se encuentra un script llamado "docker-compose-build-up.sh" que se encarga de construir la imagen y levantar el contenedor.
+1. Clonar el proyecto desde el repositorio.
+
+
+2. En la raiz del proyecto se encuentra un script llamado "docker-compose-build-up.sh" que se encarga de construir la imagen y levantar el contenedor.
    Para eso es necesario darle al script permisos de ejecución en caso de que no lo tenga.
    Para ejecutar el script se debe correr el siguiente comando:
 ```
 chmod 777 ./docker-compose-build-up.sh
 ```
 
-2. Luego de verificar que el script tiene los permisos necesarios, se procede a ejecutarlo con el siguiente comando:
+3. Luego de verificar que el script tiene los permisos necesarios, se procede a ejecutarlo con el siguiente comando:
 
 ```
 bash docker-compose-build-up.sh docker
@@ -74,12 +77,14 @@ bash docker-compose-build-up.sh docker
 En caso de que falle la ejecucion del script revisar que los scripts de docker-compose-build-up.sh y docker-compose-build-up.sh tenga el EOF en LF y no en CRLF.
 a veces al clonar el repositorio en windows se cambia el EOF a CRLF.
 
-3. Una vez ejecutado el script, la aplicación estará disponible en http://localhost:8080/challenge/api/login
-4. Para acceder a la API es necesario que utilice las siguientes credenciales:
+4. Una vez ejecutado el script, la aplicación estará disponible en http://localhost:8080/challenge/api/login
+
+
+5. Para acceder a la API es necesario que utilice las siguientes credenciales:
    - Usuario: "decrypto"
    - Contraseña: "challenge"
 
-5. Una vez colocadas las credenciales va a poder acceder a swagger y probar los endpoints. Para probar la totalidad de los endpoints es necesario que primero obtenga un token de autenticación en la sección "Autenticación".
+6. Una vez colocadas las credenciales va a poder acceder a swagger y probar los endpoints. Para probar la totalidad de los endpoints es necesario que primero obtenga un token de autenticación en la sección "Autenticación".
 
    Ejecuta la consulta "/auth/v1/sigIn" y en la respuesta va a obtener un token que debe ser colocado en el boton que se encuentra arriba a la derecha de la pantalla de swagger.
 
@@ -98,7 +103,8 @@ Para correr los tests, es suficiente con ejecutar el siguiente comando en la rai
 .\gradlew test
 ```
 
-Nota: Si lo quiere ejecutar por consola es que tenga gradle instalado en su máquina. Si quiere evitar esto, abra el proyecto en un IDE, construya el proyecto y ejecute los tests desde ahí.
+#### Nota:
+Si lo quiere ejecutar por consola es que tenga gradle instalado en su máquina. Si quiere evitar esto, abra el proyecto en un IDE, construya el proyecto y ejecute los tests desde ahí.
 
 
 ### Estándares
