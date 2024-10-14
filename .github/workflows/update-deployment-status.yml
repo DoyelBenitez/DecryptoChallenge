@@ -2,11 +2,11 @@ name: Update Deployment Status Badge
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Ejecuta cada 30 minutos
-  workflow_dispatch:  # Permite ejecución manual
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
 
 permissions:
-  contents: write  # Necesario para hacer push de cambios
+  contents: write
 
 jobs:
   update-readme:
