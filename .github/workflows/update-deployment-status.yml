@@ -53,7 +53,8 @@ jobs:
             echo "skip_update=true" >> $GITHUB_ENV
           else
             echo "skip_update=false" >> $GITHUB_ENV
-
+          fi
+          
       - name: Actualizar el readme
         if: env.skip_update == 'false'
         run: |
