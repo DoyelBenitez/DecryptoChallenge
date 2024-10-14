@@ -24,7 +24,7 @@ jobs:
           echo "HTTP Status Code: $HTTP_STATUS"
 
           if [ "$HTTP_STATUS" -eq 200 ]; then
-            STATUS="Produccion"
+            STATUS="Desplegado"
             COLOR="brightgreen"
           else
             STATUS="Caido"
