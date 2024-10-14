@@ -4,7 +4,7 @@
 ## Decisiones Tomadas
 
 #### Estructura Modular:
--Se decidió dividir el proyecto en módulos independientes (Autenticación, Common, Country, y Client-Market) para facilitar la mantenibilidad. Esta estructura también permite una migración futura a microservicios si el proyecto lo requiere.
+- Se decidió dividir el proyecto en módulos independientes (Autenticación, Common, Country, y Client-Market) para facilitar la mantenibilidad. Esta estructura también permite una migración futura a microservicios si el proyecto lo requiere.
 
 #### Modelo de Base de Datos:
 - Se eligió una base de datos relacional para asegurar la integridad de los datos, desacoplando la relación entre Mercado y País para tener mayor flexibilidad en la evolución del proyecto, manteniendo el control desde el código.
@@ -13,10 +13,10 @@
 - Se integró Swagger para documentar la API y facilitar el uso de los endpoints. La página de Swagger fue protegida con autenticación para asegurar el acceso restringido y el uso controlado de la API.
 
 #### Seguridad y Autenticación:
-- Spring Security se implementó para asegurar todos los endpoints, excepto el de login. Se eligió JWT como método de autenticación, asegurando un acceso seguro a través de tokens.
+- Se implementó Spring Security se implementó para asegurar todos los endpoints, excepto el de login. Se eligió JWT como método de autenticación, asegurando un acceso seguro a través de tokens.
 
 #### Escalabilidad y Despliegue:
--Se seleccionó Railway.app para el despliegue debido a su integración sencilla con Docker. El proyecto se dockerizó para garantizar la portabilidad y escalabilidad en cualquier entorno.
+- Se seleccionó Railway.app para el despliegue debido a su integración sencilla con Docker. El proyecto se dockerizó para garantizar la portabilidad y escalabilidad en cualquier entorno.
 
 #### Pruebas:
 - Se optó por JUnit 5 para pruebas de integración y Mockito para pruebas unitarias, lo que permite asegurar que los módulos se comporten correctamente de forma independiente y conjunta.
@@ -31,9 +31,9 @@
 - [Tecnologías](#Tecnologías)
 - [Rutas](#Rutas)
 - [PreRequisitos](#Pre-requisites)
-- [Run APP](#Run APP con Docker)
-- [Run TEST](#Run TEST)
-- [Estándares](#Estándares utilizados)
+- [RunAPP](#Run-APP)
+- [RunTEST](#Run-TEST)
+- [Estándares](#Estándares)
 
 ## Autor
 
