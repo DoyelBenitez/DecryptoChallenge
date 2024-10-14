@@ -56,7 +56,7 @@ jobs:
             echo "SKIP_UPDATE=false" >> $GITHUB_ENV
             SKIP_UPDATE=false
           fi
-          echo "Es necesario actualizar el README: $SKIP_UPDATE"
+          echo "Es necesario actualizar el README: $SKIP_UPDATE == 'false'"
           
       - name: Actualizar el readme
         if: env.SKIP_UPDATE == 'false'
