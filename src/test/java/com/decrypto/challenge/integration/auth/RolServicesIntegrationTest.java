@@ -1,7 +1,6 @@
-package com.decrypto.challenge.integration.auth.services;
+package com.decrypto.challenge.integration.auth;
 
 import com.decrypto.challenge.auth.dtos.RolDTO;
-import com.decrypto.challenge.auth.dtos.UserAccountDTO;
 import com.decrypto.challenge.auth.services.interfaces.IRolService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 /**
  * @Author dbenitez
@@ -22,6 +23,7 @@ public class CountryDataInitializerConfig {
     @Autowired
     private final ICountryService countryService;
 
+    @Order(2)
     @Bean
     public CommandLineRunner initCountryDatabase() {
         return args -> {

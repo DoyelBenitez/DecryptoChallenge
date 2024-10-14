@@ -1,4 +1,4 @@
-package com.decrypto.challenge.integration.auth.controllers;
+package com.decrypto.challenge.integration.auth;
 
 import com.decrypto.challenge.auth.dtos.RolDTO;
 import com.decrypto.challenge.auth.dtos.UserAccountDTO;

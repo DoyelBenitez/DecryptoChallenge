@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +77,10 @@ public class MarketDAO implements IMarketDAO {
 
     public List<MarketDTO> findAll() {
         List<Market> markets = this.marketRepository.findAllByDeletedIsFalse();
-        return Mapping.fullMapping(markets);
+        return Mapping.basicMapping(markets);
     }
 
+    @Transactional
     public List<MarketDTO> findAll(List<String> codes) {
         return this.marketRepository.findAllByCodeInAndDeletedIsFalse(codes)
                 .map(Mapping::fullMapping)

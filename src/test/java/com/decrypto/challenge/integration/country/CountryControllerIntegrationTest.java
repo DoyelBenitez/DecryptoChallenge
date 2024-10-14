@@ -1,4 +1,4 @@
-package com.decrypto.challenge.integration.country.controllers;
+package com.decrypto.challenge.integration.country;
 
 import com.decrypto.challenge.common._core.utils.MessageUtils;
 import com.decrypto.challenge.country.dtos.CountryDTO;

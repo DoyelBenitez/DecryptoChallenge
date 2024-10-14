@@ -75,4 +75,12 @@ public class OpenApiConfig {
                         .pathsToMatch("/auth/**", "/client/**", "/market/**")
                         .build();
         }
+
+        @Bean
+        public GroupedOpenApi statsApi() {
+                return GroupedOpenApi.builder()
+                        .group("5- Estadísticas")
+                        .pathsToMatch("/auth/**", "/stat/**")
+                        .build();
+        }
 }

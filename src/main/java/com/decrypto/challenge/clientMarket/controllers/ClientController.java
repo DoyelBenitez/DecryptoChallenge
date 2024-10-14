@@ -24,10 +24,10 @@ import java.util.List;
  * @Author dbenitez
  */
 @SecurityRequirement(name = "bearerAuth")
+@Tag(description = "Comitente", name = "API para gestionar comitentes")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/client/v1/clients")
-@Tag(description = "Comitente", name = "API para gestionar comitentes")
 public class ClientController {
 
     @Autowired

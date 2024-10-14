@@ -92,6 +92,7 @@ public class ClientService extends AbstractService implements IClientService {
 
     public Boolean existsBy(String description) throws ServiceExceptionP {
         this.checkNull("generic.null", description);
+        description = convertToTitleCase(description);
         return this.clientDao.existsBy(description);
     }
 

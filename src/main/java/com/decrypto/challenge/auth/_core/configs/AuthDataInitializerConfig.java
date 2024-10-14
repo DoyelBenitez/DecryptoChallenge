@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 
 /**
  * @Author dbenitez
@@ -21,6 +22,7 @@ public class AuthDataInitializerConfig {
     @Autowired
     private final IRolDAO rolDao;
 
+    @Order(1)
     @Bean
     public CommandLineRunner initAuthDatabase() {
         return args -> {

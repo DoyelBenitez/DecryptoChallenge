@@ -32,7 +32,7 @@ public class ClientDTO extends AbstractDTO implements IDTOMappable<Client> {
     @JsonApiRelationships("mercados")
     private List<MarketDTO> markets;
 
-    @Schema(description = "Lista de códigos de mercado asociados al comitente.", example = "[\"ROFEX\", \"ROTEX\"]")
+    @Schema(description = "Lista de códigos de mercado asociados al comitente.", example = "[\"MAE\", \"ROFEX\"]")
     private List<String> marketCodes;
 
     @Override

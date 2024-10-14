@@ -11,6 +11,7 @@ import com.decrypto.challenge.common.services.AbstractService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -84,12 +85,18 @@ public class MarketService extends AbstractService implements IMarketService {
 
     public List<MarketDTO> findAll() throws ServiceExceptionP {
         List<MarketDTO> markets = this.marketDao.findAll();
+
+        // Busco los ids de los países y los busco
         List<Long> ids = markets.stream()
                 .map(market -> market.getCountry().getId())
                 .collect(Collectors.toList());
         List<MarketCountryDTO> marketCountryDtoList = this.findAllCountry(ids);
+
+        // Creo un Map de países para acceso rápido por iod
         Map<Long, MarketCountryDTO> countryMap = marketCountryDtoList.stream()
                 .collect(Collectors.toMap(MarketCountryDTO::getId, Function.identity()));
+
+        // Asignar el país completo a cada marketDto
         for (MarketDTO marketDto : markets) {
             MarketCountryDTO countryDto = countryMap.get(marketDto.getCountry().getId());
             if (countryDto != null) {

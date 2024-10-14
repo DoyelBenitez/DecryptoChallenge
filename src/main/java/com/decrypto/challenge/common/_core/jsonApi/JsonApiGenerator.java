@@ -260,7 +260,7 @@ public class JsonApiGenerator {
      * @throws IllegalAccessException Si ocurre un error al acceder a los campos del objeto.
      */
     private void processRelationshipAndInclude(Object relatedObject, Object relationshipNode, ArrayNode includedNode) throws IllegalAccessException {
-        Long id = null;
+        Long id = -1L;
         String nameClazz = relatedObject.getClass().getSimpleName();
         try {
             Field field = relatedObject.getClass().getField("id");
