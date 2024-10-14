@@ -2,8 +2,12 @@ name: Update Deployment Status Badge
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Ejecuta cada 30 minutos
-  workflow_dispatch:  # Permite ejecución manual
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: read 
 
 jobs:
   update-readme:
@@ -21,21 +25,23 @@ jobs:
           # Obtener el ID del despliegue más reciente
           DEPLOYMENTS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/deployments?ref=refs/heads/master")
+          echo "Deployments Response: $DEPLOYMENTS"
           DEPLOYMENT_ID=$(echo "$DEPLOYMENTS" | jq -r '.[0].id')
+          echo "Deployment ID: $DEPLOYMENT_ID"
           
           # Verificar si se obtuvo un ID válido
           if [[ -z "$DEPLOYMENT_ID" || "$DEPLOYMENT_ID" == "null" ]]; then
             STATUS="unknown"
           else
             # Obtener el estado del despliegue
-            STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-              "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses" \
-              | jq -r '.[0].state // "unknown"')
-          fi
+            STATUSES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses")
+            echo "Deployment Statuses Response: $STATUSES"
+            STATUS=$(echo "$STATUSES" | jq -r '.[0].state // "unknown"')
+          }
       
           echo "Deployment Status: $STATUS"
           echo "status=$STATUS" >> $GITHUB_ENV
-
 
       - name: Update README with deployment badge
         run: |
