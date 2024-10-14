@@ -18,14 +18,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Obtener el estado del último despliegue en la rama master
           STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/deployments?ref=refs/heads/master" \
             | jq -r '.[0].statuses_url' | xargs -I {} curl -s -H "Authorization: token $GITHUB_TOKEN" {} \
             | jq -r '.[0].state')
-
+        
           echo "Deployment Status: $STATUS"
-          echo "::set-output name=status::$STATUS"
+          echo "status=$STATUS" >> $GITHUB_ENV
+
 
       - name: Update README with deployment badge
         run: |
@@ -46,5 +46,5 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add README.md
           git commit -m "Update deployment status badge" --allow-empty
+          git pull origin master --rebase
           git push origin master
-
