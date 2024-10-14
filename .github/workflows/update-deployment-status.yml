@@ -2,7 +2,7 @@ name: Update Deployment Status Badge
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/60 * * * *'
   workflow_dispatch:
 
 permissions:
