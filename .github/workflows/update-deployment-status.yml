@@ -11,23 +11,25 @@ permissions:
 jobs:
   update-readme:
     runs-on: ubuntu-latest
+    env:
+      HEALTH_CHECK_URL: "https://decryptochallenge-production.up.railway.app/challenge/api/actuator/health"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Check application health status
+      - name: Verifica el health status de la APP
         id: health_check
         run: |
           # Intentar obtener el código de estado HTTP de la aplicación
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://decryptochallenge-production.up.railway.app/challenge/api/actuator/health")
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_CHECK_URL")
           echo "Primer intento - HTTP Status Code: $HTTP_STATUS"
           
           # Si el primer intento no es 200, esperar 15 segundos
           if [ "$HTTP_STATUS" -ne 200 ]; then
             echo "Primer intento fallido. Esperando 15 segundos para reintentar..."
             sleep 15
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://decryptochallenge-production.up.railway.app/challenge/api/actuator/health")
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_CHECK_URL")
             echo "Segundo intento - HTTP Status Code: $HTTP_STATUS"
           fi
 
@@ -43,7 +45,17 @@ jobs:
           echo "status=$STATUS" >> $GITHUB_ENV
           echo "color=$COLOR" >> $GITHUB_ENV
 
-      - name: Update README with deployment badge
+      - name: Verificar si es necesario actualizar el readme
+        id: check_readme
+        run: |
+          BADGE_URL="https://img.shields.io/badge/Estado-${{ env.status }}-${{ env.color }}"
+          if grep -q "$BADGE_URL" README.md; then
+            echo "skip_update=true" >> $GITHUB_ENV
+          else
+            echo "skip_update=false" >> $GITHUB_ENV
+
+      - name: Actualizar el readme
+        if: env.skip_update == 'false'
         run: |
           STATUS=${{ env.status }}
           COLOR=${{ env.color }}
@@ -57,7 +69,8 @@ jobs:
             echo '![Deployment Status]('"$BADGE_URL"')' >> README.md
           fi
 
-      - name: Commit and push changes
+      - name: Commit and push
+        if: env.skip_update == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
