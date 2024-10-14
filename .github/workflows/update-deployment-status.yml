@@ -2,8 +2,8 @@ name: Update Deployment Status Badge
 
 on:
   schedule:
-    - cron: '*/2 * * * *'  
-  workflow_dispatch:       # Permite ejecución manual
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 
 jobs:
   update-readme:
@@ -45,5 +45,6 @@ jobs:
           git config --local user.email "github-actions@github.com"
           git config --local user.name "GitHub Actions"
           git add README.md
-          git commit -m "Update deployment status badge"
-          git push
+          git commit -m "Update deployment status badge" --allow-empty
+          git push origin master
+
