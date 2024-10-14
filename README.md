@@ -58,12 +58,16 @@ Benitez Doyel Franco
 
 ## Run-APP
 
-1. Clonar el proyecto desde el repositorio.
+1. Clonar el proyecto desde el repositorio y posicionarse en la raíz del proyecto.
 
+#### IMPORTANTE!
+      - Si utiliza Windows, al momento de clonar el repositorio seguramente se les cambió el EOF de los scripts de docker-compose-build-up.sh y docker-compose-build-up.sh a CRLF.
+      - Para poder continuar es necesario que cambien el EOF a LF. Se debe abrir el archivo con un editor de texto y modificarlo.
 
 2. En la raiz del proyecto se encuentra un script llamado "docker-compose-build-up.sh" que se encarga de construir la imagen y levantar el contenedor.
    Para eso es necesario darle al script permisos de ejecución en caso de que no lo tenga.
-   Para ejecutar el script se debe correr el siguiente comando:
+   Para darle permisos al script se debe correr el siguiente comando:
+   
 ```
 chmod 777 ./docker-compose-build-up.sh
 ```
@@ -73,9 +77,6 @@ chmod 777 ./docker-compose-build-up.sh
 ```
 bash docker-compose-build-up.sh docker
 ```
-#### Nota:
-En caso de que falle la ejecucion del script revisar que los scripts de docker-compose-build-up.sh y docker-compose-build-up.sh tenga el EOF en LF y no en CRLF.
-a veces al clonar el repositorio en windows se cambia el EOF a CRLF.
 
 4. Una vez ejecutado el script, la aplicación estará disponible en http://localhost:8080/challenge/api/login
 
@@ -84,28 +85,30 @@ a veces al clonar el repositorio en windows se cambia el EOF a CRLF.
    - Usuario: "decrypto"
    - Contraseña: "challenge"
 
-6. Una vez colocadas las credenciales va a poder acceder a swagger y probar los endpoints. Para probar la totalidad de los endpoints es necesario que primero obtenga un token de autenticación en la sección "Autenticación".
 
-   Ejecuta la consulta "/auth/v1/sigIn" y en la respuesta va a obtener un token que debe ser colocado en el boton que se encuentra arriba a la derecha de la pantalla de swagger.
+6. Una vez colocadas las credenciales va a poder acceder a swagger y probar los endpoints. 
 
-   En este botón se debe colocar el token. Esto permite que pueda probar los endpoints de la API sin necesidad de tener que ponerlo uno por uno.
+Para probar la totalidad de los endpoints es necesario que primero obtenga un token de autenticación en la sección "Autenticación".
+
+Ejecuta la consulta "/auth/v1/sigIn" y en la respuesta va a obtener un token que debe ser colocado en el botón verde (Authorize) que se encuentra arriba a la derecha de la pantalla del home de swagger.
+
+   En este botón se debe colocar el token. Esto permite que pueda probar los endpoints de la API sin necesidad de tener que ponerlo para cada endpoint.
 
 #### Nota:
 En caso de que este probando en Railway y salgan problemas de CORS, revisar en swagger que hay un botón select para poder cambiar de ruta, debe colocar la ruta "https://decryptochallenge-production.up.railway.app/challenge/api/"
 
 
-### Run-TEST
+## Run-TEST
 
+Aunque el docker-compose-build-up.sh ejecuta los test. Si se quisiera correr los test manualmente se necesita tener instalado localmente: 
+- java 21.0.2 o superior.
+- gradle 8.10.2 o superior.
 
-Para correr los tests, es suficiente con ejecutar el siguiente comando en la raiz del proyecto:
+Una vez que se tenga instalado los pre-requisitos, se debe ejecutar el siguiente comando en la raiz del proyecto:
 
 ```
 .\gradlew test
 ```
-
-#### Nota:
-Si lo quiere ejecutar por consola es que tenga gradle instalado en su máquina. Si quiere evitar esto, abra el proyecto en un IDE, construya el proyecto y ejecute los tests desde ahí.
-
 
 ### Estándares
 - RESTful
