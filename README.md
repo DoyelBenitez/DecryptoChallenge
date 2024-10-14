@@ -56,7 +56,7 @@ Benitez Doyel Franco
 - Tener instalado Docker y docker compose. Version minima de Docker 4.31.1 (153621)
 - Tener libre el puerto 8080 para la API y el puerto 5440 para la BD
 
-## Run APP con Docker
+## Run-APP
 
 1. En la raiz del proyecto se encuentra un script llamado "docker-compose-build-up.sh" que se encarga de construir la imagen y levantar el contenedor.
    Para eso es necesario darle al script permisos de ejecución en caso de que no lo tenga.
@@ -70,26 +70,26 @@ chmod 777 ./docker-compose-build-up.sh
 ```
 bash docker-compose-build-up.sh docker
 ```
-#### Nota: 
+#### Nota:
 En caso de que falle la ejecucion del script revisar que los scripts de docker-compose-build-up.sh y docker-compose-build-up.sh tenga el EOF en LF y no en CRLF.
 a veces al clonar el repositorio en windows se cambia el EOF a CRLF.
 
 3. Una vez ejecutado el script, la aplicación estará disponible en http://localhost:8080/challenge/api/login
 4. Para acceder a la API es necesario que utilice las siguientes credenciales:
-    - Usuario: "decrypto"
-    - Contraseña: "challenge"
+   - Usuario: "decrypto"
+   - Contraseña: "challenge"
 
 5. Una vez colocadas las credenciales va a poder acceder a swagger y probar los endpoints. Para probar la totalidad de los endpoints es necesario que primero obtenga un token de autenticación en la sección "Autenticación".
 
    Ejecuta la consulta "/auth/v1/sigIn" y en la respuesta va a obtener un token que debe ser colocado en el boton que se encuentra arriba a la derecha de la pantalla de swagger.
 
-    En este botón se debe colocar el token. Esto permite que pueda probar los endpoints de la API sin necesidad de tener que ponerlo uno por uno.
+   En este botón se debe colocar el token. Esto permite que pueda probar los endpoints de la API sin necesidad de tener que ponerlo uno por uno.
 
 #### Nota:
 En caso de que este probando en Railway y salgan problemas de CORS, revisar en swagger que hay un botón select para poder cambiar de ruta, debe colocar la ruta "https://decryptochallenge-production.up.railway.app/challenge/api/"
 
 
-### Run TEST
+### Run-TEST
 
 
 Para correr los tests, es suficiente con ejecutar el siguiente comando en la raiz del proyecto:
@@ -101,7 +101,7 @@ Para correr los tests, es suficiente con ejecutar el siguiente comando en la rai
 Nota: Si lo quiere ejecutar por consola es que tenga gradle instalado en su máquina. Si quiere evitar esto, abra el proyecto en un IDE, construya el proyecto y ejecute los tests desde ahí.
 
 
-### Estándares utilizados
+### Estándares
 - RESTful
 - JSON Web Tokens (JWT)
 - JsonAPI
