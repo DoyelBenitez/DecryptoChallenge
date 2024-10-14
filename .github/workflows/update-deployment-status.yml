@@ -25,10 +25,10 @@ jobs:
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_CHECK_URL")
           echo "Primer intento - HTTP Status Code: $HTTP_STATUS"
           
-          # Si el primer intento no es 200, esperar 15 segundos
+          # Si el primer intento no es 200, esperar 30 segundos
           if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "Primer intento fallido. Esperando 15 segundos para reintentar..."
-            sleep 15
+            echo "Primer intento fallido. Esperando 30 segundos para reintentar..."
+            sleep 30
             HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_CHECK_URL")
             echo "Segundo intento - HTTP Status Code: $HTTP_STATUS"
           fi
@@ -51,8 +51,10 @@ jobs:
           BADGE_URL="https://img.shields.io/badge/Estado-${{ env.status }}-${{ env.color }}"
           if grep -q "$BADGE_URL" README.md; then
             echo "SKIP_UPDATE=true" >> $GITHUB_ENV
+            SKIP_UPDATE=true
           else
             echo "SKIP_UPDATE=false" >> $GITHUB_ENV
+            SKIP_UPDATE=false
           fi
           echo "Es necesario actualizar el README: $SKIP_UPDATE"
           
