@@ -2,8 +2,8 @@ name: Update Deployment Status Badge
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
-  workflow_dispatch:
+    - cron: '*/30 * * * *'  # Ejecuta cada 30 minutos
+  workflow_dispatch:  # Permite ejecución manual
 
 jobs:
   update-readme:
@@ -18,18 +18,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+          DEPLOYMENT_ID=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/deployments?ref=refs/heads/master" \
-            | jq -r '.[0].statuses_url' | xargs -I {} curl -s -H "Authorization: token $GITHUB_TOKEN" {} \
-            | jq -r '.[0].state')
-        
+            | jq -r '.[0].id')
+          
+          if [[ -n "$DEPLOYMENT_ID" ]]; then
+            STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses" \
+              | jq -r '.[0].state')
+          else
+            STATUS="unknown"
+          fi
+          
           echo "Deployment Status: $STATUS"
           echo "status=$STATUS" >> $GITHUB_ENV
 
-
       - name: Update README with deployment badge
         run: |
-          STATUS=${{ steps.deployment-status.outputs.status }}
+          STATUS=${{ env.status }}
           if [[ "$STATUS" == "active" ]]; then
             COLOR="brightgreen"
           elif [[ "$STATUS" == "in_progress" ]]; then
@@ -41,6 +47,8 @@ jobs:
           sed -i 's|!\[Deployment Status\](.*)|![Deployment Status]('"$BADGE_URL"')|' README.md
 
       - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "github-actions@github.com"
           git config --local user.name "GitHub Actions"
