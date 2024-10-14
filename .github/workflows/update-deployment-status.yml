@@ -2,8 +2,11 @@ name: Update Deployment Status Badge
 
 on:
   schedule:
-    - cron: '*/2 * * * *'  
-  workflow_dispatch:       # Permite ejecución manual
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update-readme:
@@ -13,37 +16,46 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Get latest deployment status from GitHub (master branch)
-        id: deployment-status
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check application health status
+        id: health_check
         run: |
-          # Obtener el estado del último despliegue en la rama master
-          STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/deployments?ref=refs/heads/master" \
-            | jq -r '.[0].statuses_url' | xargs -I {} curl -s -H "Authorization: token $GITHUB_TOKEN" {} \
-            | jq -r '.[0].state')
+          # Intentar obtener el código de estado HTTP de la aplicación
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://decryptochallenge-production.up.railway.app/challenge/api/actuator/health)
+          echo "HTTP Status Code: $HTTP_STATUS"
 
-          echo "Deployment Status: $STATUS"
-          echo "::set-output name=status::$STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            STATUS="Desplegado"
+            COLOR="brightgreen"
+          else
+            STATUS="Caido"
+            COLOR="red"
+          fi
+
+          echo "Application Status: $STATUS"
+          echo "status=$STATUS" >> $GITHUB_ENV
+          echo "color=$COLOR" >> $GITHUB_ENV
 
       - name: Update README with deployment badge
         run: |
-          STATUS=${{ steps.deployment-status.outputs.status }}
-          if [[ "$STATUS" == "active" ]]; then
-            COLOR="brightgreen"
-          elif [[ "$STATUS" == "in_progress" ]]; then
-            COLOR="yellow"
+          STATUS=${{ env.status }}
+          COLOR=${{ env.color }}
+          BADGE_URL="https://img.shields.io/badge/Estado-$STATUS-$COLOR"
+          # Reemplazar o agregar el badge en README.md
+          if grep -q "!\[Deployment Status\]" README.md; then
+            # Reemplazar el badge existente
+            sed -i 's|!\[Deployment Status\](.*)|![Deployment Status]('"$BADGE_URL"')|' README.md
           else
-            COLOR="red"
+            # Agregar el badge si no existe
+            echo '![Deployment Status]('"$BADGE_URL"')' >> README.md
           fi
-          BADGE_URL="https://img.shields.io/badge/deployment-$STATUS-$COLOR"
-          sed -i 's|!\[Deployment Status\](.*)|![Deployment Status]('"$BADGE_URL"')|' README.md
 
       - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "github-actions@github.com"
           git config --local user.name "GitHub Actions"
           git add README.md
-          git commit -m "Update deployment status badge"
-          git push
+          git commit -m "Actualizar badge de estado de despliegue" || echo "No hay cambios para commitear"
+          git pull origin master --rebase
+          git push origin master
