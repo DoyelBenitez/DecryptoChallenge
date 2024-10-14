@@ -18,20 +18,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          DEPLOYMENT_ID=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/deployments?ref=refs/heads/master" \
-            | jq -r '.[0].id')
+          # Obtener el ID del despliegue más reciente
+          DEPLOYMENTS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/deployments?ref=refs/heads/master")
+          DEPLOYMENT_ID=$(echo "$DEPLOYMENTS" | jq -r '.[0].id')
           
-          if [[ -n "$DEPLOYMENT_ID" ]]; then
+          # Verificar si se obtuvo un ID válido
+          if [[ -z "$DEPLOYMENT_ID" || "$DEPLOYMENT_ID" == "null" ]]; then
+            STATUS="unknown"
+          else
+            # Obtener el estado del despliegue
             STATUS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses" \
-              | jq -r '.[0].state')
-          else
-            STATUS="unknown"
+              | jq -r '.[0].state // "unknown"')
           fi
-          
+      
           echo "Deployment Status: $STATUS"
           echo "status=$STATUS" >> $GITHUB_ENV
+
 
       - name: Update README with deployment badge
         run: |
