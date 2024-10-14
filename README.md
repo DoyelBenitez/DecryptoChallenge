@@ -107,8 +107,10 @@ Aunque el docker-compose-build-up.sh ejecuta los test. Si se quisiera correr los
 Una vez que se tenga instalado los pre-requisitos, se debe ejecutar el siguiente comando en la raiz del proyecto:
 
 ```
-.\gradlew test
+gradle test o .\gradlew test
 ```
+
+Depende como tenga configurado gredle en su maquina local.
 
 ### Estándares
 - RESTful
