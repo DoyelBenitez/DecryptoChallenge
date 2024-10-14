@@ -50,14 +50,14 @@ jobs:
         run: |
           BADGE_URL="https://img.shields.io/badge/Estado-${{ env.status }}-${{ env.color }}"
           if grep -q "$BADGE_URL" README.md; then
-            echo "skip_update=true" >> $GITHUB_ENV
+            echo "SKIP_UPDATE=true" >> $GITHUB_ENV
           else
-            echo "skip_update=false" >> $GITHUB_ENV
+            echo "SKIP_UPDATE=false" >> $GITHUB_ENV
           fi
-          echo "Es necesario actualizar el README: ${{ env.skip_update }}"
+          echo "Es necesario actualizar el README: $SKIP_UPDATE"
           
       - name: Actualizar el readme
-        if: env.skip_update == 'false'
+        if: env.SKIP_UPDATE == 'false'
         run: |
           STATUS=${{ env.status }}
           COLOR=${{ env.color }}
@@ -72,7 +72,7 @@ jobs:
           fi
 
       - name: Commit and push
-        if: env.skip_update == 'false'
+        if: env.SKIP_UPDATE == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
